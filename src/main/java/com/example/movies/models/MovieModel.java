@@ -24,8 +24,18 @@ public class MovieModel  implements Serializable {
     private String name;
     private String director;
     private int releaseYear;
+
+    public MovieModel(UUID idMovie, String name, String director, int releaseYear, String genre) {
+        this.idMovie = idMovie;
+        this.name = name;
+        this.director = director;
+        this.releaseYear = releaseYear;
+        this.genre = genre;
+    }
+    public MovieModel(){};
+
     private String genre;
-    private int review;
+
 
     public UUID getIdMovie() {
         return idMovie;
@@ -67,11 +77,5 @@ public class MovieModel  implements Serializable {
         this.genre = genre;
     }
 
-    public int getReview() {
-        return review;
-    }
 
-    public void setReview(int review) {
-        this.review = review;
-    }
 }
