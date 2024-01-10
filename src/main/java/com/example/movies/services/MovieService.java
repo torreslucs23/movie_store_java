@@ -45,4 +45,8 @@ public class MovieService {
         }
         return false;
     }
+
+    public List<Movie> findMovieBySubstring(String substring){
+        return movieRepository.findMoviesBySubstring(substring);
+    }
 }

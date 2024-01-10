@@ -3,6 +3,7 @@ package com.example.movies.controllers;
 import com.example.movies.models.Movie;
 import com.example.movies.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -59,5 +60,10 @@ public class MovieController {
         return deleted ?
                 new ResponseEntity<>(HttpStatus.NO_CONTENT) :
                 new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/byName")
+    public List<Movie> findMoviesBySubstring(@RequestParam String substring){
+        return movieService.findMovieBySubstring(substring);
     }
 }
