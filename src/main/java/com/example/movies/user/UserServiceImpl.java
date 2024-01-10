@@ -1,17 +1,18 @@
 package com.example.movies.user;
 
 
+import com.example.movies.config.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-
 public class UserServiceImpl implements UserService{
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
     @Autowired
     UserRepository userRepository;
     @Override
@@ -24,5 +25,19 @@ public class UserServiceImpl implements UserService{
         user.setPassword(passwordEncoder().encode(user.getPassword()));
         User createdUser = userRepository.save(user);
         return createdUser;
+    }
+
+    @Override
+    public String login(String username, String password){
+        User existUser = this.userRepository.findByUsername(username);
+        if(existUser == null){
+            throw new Error("user doesn't exists");
+        }
+        if(passwordEncoder().matches(password, existUser.getPassword())){
+            return JwtUtil.generateToken(username);
+        }
+        else {
+            throw new RuntimeException("Invalid password");
+        }
     }
 }
