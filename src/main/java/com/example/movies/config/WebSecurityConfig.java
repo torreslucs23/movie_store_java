@@ -20,13 +20,7 @@ public class WebSecurityConfig {
 
 
     @Autowired
-    private JwtFilter customBasicAuthenticationFilter;
-
-
-    //@Autowired
-    //private JwtRequestFilter jwtRequestFilter;
-
-
+    private JwtFilter jwtFilter;
 
 
 
@@ -35,10 +29,10 @@ public class WebSecurityConfig {
         return http.csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((request) -> request
-                        .requestMatchers(HttpMethod.POST, "/user/**", "/user/login"). permitAll()
+                        .requestMatchers(HttpMethod.POST, "/user/**", "/swagger-ui.html"). permitAll()
                         .anyRequest()
                         .authenticated())
-                .addFilterBefore(customBasicAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
 
 

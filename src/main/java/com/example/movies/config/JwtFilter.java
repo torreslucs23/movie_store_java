@@ -48,7 +48,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
 
 
-                // Configurar autenticação no contexto do Spring Security
                 setAuthentication(user);
             } catch (ExpiredJwtException e) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

@@ -63,6 +63,7 @@ public class MovieController {
     }
 
     @GetMapping("/byName")
+    @PreAuthorize("hasRole('default_user')")
     public List<Movie> findMoviesBySubstring(@RequestParam String substring){
         return movieService.findMovieBySubstring(substring);
     }
