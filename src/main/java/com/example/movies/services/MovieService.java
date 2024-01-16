@@ -1,10 +1,12 @@
 package com.example.movies.services;
 
+import com.example.movies.dtos.MovieResponseDto;
 import com.example.movies.models.Movie;
 import com.example.movies.repositories.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,12 +20,26 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
-    public List<Movie> getAllMovies() {
-        return movieRepository.findAll();
+    public List<MovieResponseDto> getAllMovies() {
+        List<Movie> movies = movieRepository.findAll();
+        List<MovieResponseDto> movieResponseDtos = new ArrayList<>();
+
+        for (Movie movie : movies) {
+            MovieResponseDto movieDto = new MovieResponseDto(movie.getId(),movie.getName(), movie.getDirector(), movie.getYear(), movieRepository.averageRatingByMovieId(movie.getId()));
+            movieResponseDtos.add(movieDto);
+        }
+
+        return movieResponseDtos;
     }
 
-    public Optional<Movie> getMovieById(Long id) {
-        return movieRepository.findById(id);
+    public MovieResponseDto getMovieById(Long id) {
+        Optional<Movie> optMovie = movieRepository.findById(id);
+        if(optMovie.isPresent()){
+            Movie movie = optMovie.get();
+            MovieResponseDto movieDto = new MovieResponseDto(movie.getId(),movie.getName(), movie.getDirector(), movie.getYear(), movieRepository.averageRatingByMovieId(movie.getId()));
+            return movieDto;
+        }
+        return null;
     }
 
     public Movie createMovie(Movie movie) {
@@ -46,7 +62,16 @@ public class MovieService {
         return false;
     }
 
-    public List<Movie> findMovieBySubstring(String substring){
-        return movieRepository.findMoviesBySubstring(substring);
+    public List<MovieResponseDto> findMovieBySubstring(String substring){
+        List<Movie> movies = movieRepository.findMoviesBySubstring(substring);
+
+        List<MovieResponseDto> movieResponseDtos = new ArrayList<>();
+
+        for (Movie movie : movies) {
+            MovieResponseDto movieDto = new MovieResponseDto(movie.getId(),movie.getName(), movie.getDirector(), movie.getYear(), movieRepository.averageRatingByMovieId(movie.getId()));
+            movieResponseDtos.add(movieDto);
+        }
+
+        return movieResponseDtos;
     }
 }

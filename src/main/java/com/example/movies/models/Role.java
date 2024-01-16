@@ -1,4 +1,4 @@
-package com.example.movies.role;
+package com.example.movies.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

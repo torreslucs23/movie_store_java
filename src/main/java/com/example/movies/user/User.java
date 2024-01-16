@@ -1,7 +1,7 @@
 package com.example.movies.user;
 
 
-import com.example.movies.role.Role;
+import com.example.movies.models.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

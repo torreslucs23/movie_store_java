@@ -1,4 +1,5 @@
 package com.example.movies.dtos;
 
-public record ReviewResponseDto() {
+public record MovieResponseDto(Long id, String name, String director, int year, Double meanRating) {
+
 }

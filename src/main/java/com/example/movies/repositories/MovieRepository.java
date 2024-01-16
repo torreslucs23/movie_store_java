@@ -13,4 +13,8 @@ import java.util.UUID;
 public interface MovieRepository extends JpaRepository <Movie, Long> {
     @Query("SELECT f FROM Movie f WHERE f.name LIKE %:substring%")
     List<Movie> findMoviesBySubstring(@Param("substring") String substring);
+
+    @Query("SELECT COALESCE(AVG(r.rating), null) FROM Review r WHERE r.movie.id = :movieId")
+    Double averageRatingByMovieId(@Param("movieId") Long movieId);
+
 }
