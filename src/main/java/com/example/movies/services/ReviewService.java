@@ -24,6 +24,7 @@ public class ReviewService {
     private UserRepository userRepository;
 
 
+
     @Autowired
     public ReviewService(ReviewRepository reviewRepository){
         this.reviewRepository = reviewRepository;
@@ -33,14 +34,16 @@ public class ReviewService {
         return reviewRepository.findByReviewByMovieAndUser(idMovie, idUser);
     }
 
-    public Review createReview(Long idMovie, Long idUser, int rating){
+    public Review createReview(Long idMovie, Long idUser, int rating) {
         Movie movie = movieRepository.findById(idMovie).orElse(null);
-        if (movie == null){
-            return null;
-
-        }
         User user = userRepository.findById(idUser).orElse(null);
-        if (user == null){
+
+        if (movie == null || user == null) {
+            return null;
+        }
+
+        if (reviewRepository.existsByUserAndMovie(user, movie)) {
+
             return null;
         }
 
@@ -48,24 +51,29 @@ public class ReviewService {
         return reviewRepository.save(review);
     }
 
-    public Review updateReview(ReviewDto review, Long id){
-        Review existsReview = reviewRepository.findById(id).orElse(null);
-        if (existsReview == null){
+    public Review updateReview(ReviewDto reviewDto, Long id) {
+        Review existingReview = reviewRepository.findById(id).orElse(null);
+
+        if (existingReview == null) {
             return null;
         }
 
-        Movie movie = movieRepository.findById(review.movieId()).orElse(null);
-        if (movie == null){
-            return null;
-        }
-        User user = userRepository.findById(review.userId()).orElse(null);
-        if (user == null){
-            return null;
-        }
-        Review newReview = new Review(user, movie, review.rating());
-        newReview.setId(id);
-        return newReview;
+        Movie movie = movieRepository.findById(reviewDto.movieId()).orElse(null);
+        User user = userRepository.findById(reviewDto.userId()).orElse(null);
 
+        if (movie == null || user == null) {
+            return null;
+        }
+
+        if (reviewRepository.existsByUserAndMovie(user, movie) && !user.equals(existingReview.getUser()) && !movie.equals(existingReview.getMovie())) {
+            return null;
+        }
+
+        existingReview.setUser(user);
+        existingReview.setMovie(movie);
+        existingReview.setRating(reviewDto.rating());
+
+        return reviewRepository.save(existingReview);
     }
 
     public boolean deleteReview(Long id){

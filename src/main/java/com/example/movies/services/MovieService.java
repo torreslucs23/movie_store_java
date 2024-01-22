@@ -3,17 +3,23 @@ package com.example.movies.services;
 import com.example.movies.dtos.MovieResponseDto;
 import com.example.movies.models.Movie;
 import com.example.movies.repositories.MovieRepository;
+import com.example.movies.repositories.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class MovieService {
     @Autowired
     private final MovieRepository movieRepository;
+
+    @Autowired
+    private  ReviewRepository reviewRepository;
 
     @Autowired
     public MovieService(MovieRepository movieRepository) {
@@ -56,6 +62,7 @@ public class MovieService {
 
     public boolean deleteMovie(Long id) {
         if (movieRepository.existsById(id)) {
+            reviewRepository.deleteMovieReviews(id);
             movieRepository.deleteById(id);
             return true;
         }

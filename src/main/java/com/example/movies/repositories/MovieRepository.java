@@ -17,4 +17,6 @@ public interface MovieRepository extends JpaRepository <Movie, Long> {
     @Query("SELECT COALESCE(AVG(r.rating), null) FROM Review r WHERE r.movie.id = :movieId")
     Double averageRatingByMovieId(@Param("movieId") Long movieId);
 
+
+
 }
