@@ -3,6 +3,7 @@ package com.example.movies.controllers;
 import com.example.movies.dtos.ReviewDto;
 import com.example.movies.models.Review;
 import com.example.movies.services.ReviewService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/reviews")
+@SecurityRequirement(name = "Bearer Authentication")
 public class ReviewController {
     private final ReviewService reviewService;
 

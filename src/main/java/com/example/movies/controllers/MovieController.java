@@ -3,6 +3,7 @@ package com.example.movies.controllers;
 import com.example.movies.dtos.MovieResponseDto;
 import com.example.movies.models.Movie;
 import com.example.movies.services.MovieService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/movies")
+@SecurityRequirement(name = "Bearer Authentication")
 public class MovieController {
     private final MovieService movieService;
 

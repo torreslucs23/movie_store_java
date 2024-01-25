@@ -35,7 +35,8 @@ public class WebSecurityConfig {
         return http.csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((request) -> request
-                        .requestMatchers(HttpMethod.POST, "/user/**", "/swagger-ui.html"). permitAll()
+                        .requestMatchers(HttpMethod.POST, "/user/**", "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**"). permitAll()
+                        .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**").permitAll()
                         .anyRequest()
                         .authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
