@@ -74,6 +74,7 @@ public class ReviewService {
         existingReview.setRating(reviewDto.rating());
 
         return reviewRepository.save(existingReview);
+
     }
 
     public boolean deleteReview(Long id){

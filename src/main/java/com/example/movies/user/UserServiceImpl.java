@@ -2,13 +2,22 @@ package com.example.movies.user;
 
 
 import com.example.movies.config.JwtUtil;
+import com.example.movies.models.Role;
+import com.example.movies.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class UserServiceImpl implements UserService{
+
+    @Autowired
+    private  RoleRepository roleRepository;
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
@@ -23,6 +32,11 @@ public class UserServiceImpl implements UserService{
             throw new Error("user already exists");
         }
         user.setPassword(passwordEncoder().encode(user.getPassword()));
+        Long id = Long.valueOf(1);
+        Optional<Role> role = roleRepository.findById(id);
+        List<Role> roles = new ArrayList<>();
+        roles.add(role.get());
+        user.setRoles(roles);
         User createdUser = userRepository.save(user);
         return createdUser;
     }

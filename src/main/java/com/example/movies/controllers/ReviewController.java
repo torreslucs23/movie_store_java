@@ -38,19 +38,21 @@ public class ReviewController {
 
     @PreAuthorize("hasRole('default_user')")
     @PostMapping
-    public ResponseEntity<Review> createReview(@RequestBody ReviewDto request){
+    public ResponseEntity<ReviewDto> createReview(@RequestBody ReviewDto request){
         Review createdReview = reviewService.createReview(request.movieId(), request.userId(), request.rating());
         if(createdReview != null){
-            return new ResponseEntity<>(createdReview, HttpStatus.OK);
+            ReviewDto response = new ReviewDto(request.movieId(), request.userId(), request.rating());
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     @PreAuthorize("hasRole('default_user')")
     @PutMapping("/{id}")
-    public ResponseEntity<Review> updateReview(@RequestBody ReviewDto request, @PathVariable Long id){
+    public ResponseEntity<ReviewDto> updateReview(@RequestBody ReviewDto request, @PathVariable Long id){
         Review review = reviewService.updateReview(request, id);
         if(review != null){
-            return new ResponseEntity<>(review, HttpStatus.OK);
+            ReviewDto response = new ReviewDto(request.movieId(), request.userId(), request.rating());
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

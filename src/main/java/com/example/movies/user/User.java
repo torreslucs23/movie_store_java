@@ -23,9 +23,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+
     private String username;
 
     private String password;
+
+    @ManyToMany
+    private List<Role> roles;
 
     public long getId() {
         return id;
@@ -59,6 +63,5 @@ public class User {
         this.roles = roles;
     }
 
-    @ManyToMany
-    private List<Role> roles;
+
 }

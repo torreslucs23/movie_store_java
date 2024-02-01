@@ -1,10 +1,7 @@
 package com.example.movies.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
+
 @Entity
 @Table(name="movies")
 
@@ -13,6 +10,7 @@ public class Movie {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @Column(nullable = false, unique = true)
     private String name;
 
     private String director;
