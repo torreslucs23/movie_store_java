@@ -31,7 +31,7 @@ public class MovieService {
         List<MovieResponseDto> movieResponseDtos = new ArrayList<>();
 
         for (Movie movie : movies) {
-            MovieResponseDto movieDto = new MovieResponseDto(movie.getId(),movie.getName(), movie.getDirector(), movie.getYear(), movieRepository.averageRatingByMovieId(movie.getId()));
+            MovieResponseDto movieDto = new MovieResponseDto(movie.getId(),movie.getName(), movie.getDirector(), movie.getDescription(), movie.getYear(), movieRepository.averageRatingByMovieId(movie.getId()));
             movieResponseDtos.add(movieDto);
         }
 
@@ -42,7 +42,7 @@ public class MovieService {
         Optional<Movie> optMovie = movieRepository.findById(id);
         if(optMovie.isPresent()){
             Movie movie = optMovie.get();
-            MovieResponseDto movieDto = new MovieResponseDto(movie.getId(),movie.getName(), movie.getDirector(), movie.getYear(), movieRepository.averageRatingByMovieId(movie.getId()));
+            MovieResponseDto movieDto = new MovieResponseDto(movie.getId(),movie.getName(), movie.getDirector(), movie.getDescription(), movie.getYear(), movieRepository.averageRatingByMovieId(movie.getId()));
             return movieDto;
         }
         return null;
@@ -75,7 +75,7 @@ public class MovieService {
         List<MovieResponseDto> movieResponseDtos = new ArrayList<>();
 
         for (Movie movie : movies) {
-            MovieResponseDto movieDto = new MovieResponseDto(movie.getId(),movie.getName(), movie.getDirector(), movie.getYear(), movieRepository.averageRatingByMovieId(movie.getId()));
+            MovieResponseDto movieDto = new MovieResponseDto(movie.getId(),movie.getName(), movie.getDirector(), movie.getDescription(), movie.getYear(), movieRepository.averageRatingByMovieId(movie.getId()));
             movieResponseDtos.add(movieDto);
         }
 
