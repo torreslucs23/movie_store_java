@@ -1,6 +1,7 @@
 package com.example.movies.controllers;
 
 import com.example.movies.dtos.MovieResponseDto;
+import com.example.movies.dtos.ResponseDto;
 import com.example.movies.models.Movie;
 import com.example.movies.services.MovieService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -33,42 +34,67 @@ public class MovieController {
 
     @PreAuthorize("hasRole('default_user')")
     @GetMapping("/{id}")
-    public ResponseEntity<MovieResponseDto> getMovieById(@PathVariable Long id) {
+    public ResponseEntity<?> getMovieById(@PathVariable Long id) {
         MovieResponseDto  movie = movieService.getMovieById(id);
         if(movie == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            ResponseDto response = new ResponseDto("error", "Movie not found");
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(movie, HttpStatus.OK);
     }
 
     @PostMapping
     @PreAuthorize("hasRole('default_user')")
-    public ResponseEntity<Movie> createMovie(@RequestBody Movie movie) {
+    public ResponseEntity<?> createMovie(@RequestBody Movie movie) {
         Movie createdMovie = movieService.createMovie(movie);
-        return new ResponseEntity<>(createdMovie, HttpStatus.CREATED);
+        if(movie != null){
+            return new ResponseEntity<>(createdMovie, HttpStatus.CREATED);
+        }
+        else{
+            ResponseDto response = new ResponseDto("error", "Failed to create the movie. Please check the provided data.");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('default_user')")
-    public ResponseEntity<Movie> updateMovie(@PathVariable Long id, @RequestBody Movie updatedMovie) {
+    public ResponseEntity<?> updateMovie(@PathVariable Long id, @RequestBody Movie updatedMovie) {
         Movie movie = movieService.updateMovie(id, updatedMovie);
-        return movie != null ?
-                new ResponseEntity<>(movie, HttpStatus.OK) :
-                new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if(movie != null){
+            return new ResponseEntity<>(movie, HttpStatus.OK);
+        } else {
+            ResponseDto response = new ResponseDto("error", "not found");
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('default_user')")
-    public ResponseEntity<Void> deleteMovie(@PathVariable Long id) {
+    public ResponseEntity<?> deleteMovie(@PathVariable Long id) {
         boolean deleted = movieService.deleteMovie(id);
-        return deleted ?
-                new ResponseEntity<>(HttpStatus.NO_CONTENT) :
-                new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if(deleted){
+            ResponseDto response = new ResponseDto("success", "Movie deleted successfully");
+           return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+        }
+        else{
+            ResponseDto response = new ResponseDto("error", "movie not found");
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+
     }
 
     @GetMapping("/byName")
     @PreAuthorize("hasRole('default_user')")
-    public List<MovieResponseDto> findMoviesBySubstring(@RequestParam String substring){
-        return movieService.findMovieBySubstring(substring);
+    public ResponseEntity<?> findMoviesBySubstring(@RequestParam String substring){
+        List<MovieResponseDto> movies = movieService.findMovieBySubstring(substring);
+
+        if(movies != null && !movies.isEmpty()){
+            return new ResponseEntity<>(movies, HttpStatus.OK);
+        }
+        else{
+            ResponseDto response = new ResponseDto("error", "movie not found");
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
     }
 }
