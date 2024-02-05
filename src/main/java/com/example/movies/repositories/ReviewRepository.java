@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("SELECT r FROM Review r WHERE r.movie.id = :idMovie AND r.user.id = :idUser")
     Review findByReviewByMovieAndUser(@Param("idMovie") long idMovie,  @Param("idUser") long idUser);
@@ -18,4 +20,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     void deleteMovieReviews(@Param("movieId") Long movieId);
 
 
+    @Modifying
+    @Query("DELETE FROM Review r WHERE r.user.id = :userId")
+    void deleteByUserId(@Param("userId") Long userId);
 }

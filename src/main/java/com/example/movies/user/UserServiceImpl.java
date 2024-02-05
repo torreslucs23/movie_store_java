@@ -2,12 +2,15 @@ package com.example.movies.user;
 
 
 import com.example.movies.config.JwtUtil;
+import com.example.movies.models.Review;
 import com.example.movies.models.Role;
+import com.example.movies.repositories.ReviewRepository;
 import com.example.movies.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +21,9 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private  RoleRepository roleRepository;
+
+    @Autowired
+    private ReviewRepository reviewRepository;
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
@@ -54,4 +60,24 @@ public class UserServiceImpl implements UserService{
             throw new RuntimeException("Invalid password");
         }
     }
+
+    @Override
+    @Transactional
+    public boolean deleteUser(Long id){
+        Optional<User>existUser = this.userRepository.findById(id);
+        if(existUser.isPresent()){
+            User user = existUser.get();
+
+            if(user.getRoles() != null){
+                user.getRoles().clear();
+            }
+            reviewRepository.deleteByUserId(user.getId());
+
+            userRepository.delete(user);
+            return true;
+        }
+        return false;
+    }
+
+
 }

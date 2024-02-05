@@ -2,10 +2,12 @@ package com.example.movies.user;
 
 import com.example.movies.config.JwtUtil;
 import com.example.movies.dtos.LoginDto;
+import com.example.movies.dtos.ResponseDto;
 import com.example.movies.dtos.UserDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,5 +42,16 @@ public class UserController {
         UserDto user = new UserDto(optUser.getId(), optUser.getUsername(), token );
 
         return user;
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id){
+        boolean isDeleted = userService.deleteUser(id);
+        if (isDeleted){
+            ResponseDto response = new ResponseDto("success", "User deleted successfully");
+            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+        }
+        ResponseDto response = new ResponseDto("error", "User not found");
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 }
