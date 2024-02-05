@@ -19,6 +19,8 @@ public class Movie {
 
     private int year;
 
+    private String imgUrl;
+
 
     public String getDescription() {
         return description;
@@ -28,12 +30,13 @@ public class Movie {
         this.description = description;
     }
 
-    public Movie(long id, String name, String director, String description, int year) {
+    public Movie(long id, String name, String director, String description, int year, String imgUrl) {
         this.id = id;
         this.name = name;
         this.director = director;
         this.description = description;
         this.year = year;
+        this.imgUrl = imgUrl;
     }
     public Movie(){}
 
@@ -67,5 +70,13 @@ public class Movie {
 
     public void setYear(int year) {
         this.year = year;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 }
