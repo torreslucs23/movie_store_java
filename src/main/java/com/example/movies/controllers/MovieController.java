@@ -6,6 +6,8 @@ import com.example.movies.models.Movie;
 import com.example.movies.services.MovieService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,8 +29,9 @@ public class MovieController {
 
     @PreAuthorize("hasRole('default_user')")
     @GetMapping
-    public List<MovieResponseDto> getAllMovies() {
-        return movieService.getAllMovies();
+    public Page<MovieResponseDto> getAllMovies(@RequestParam(required = false, defaultValue = "0") int page,
+                                               @RequestParam(required = false, defaultValue = "4") int size) {
+        return movieService.getAllMovies(page, size);
     }
 
 
@@ -86,8 +89,9 @@ public class MovieController {
 
     @GetMapping("/byName")
     @PreAuthorize("hasRole('default_user')")
-    public ResponseEntity<?> findMoviesBySubstring(@RequestParam String substring){
-        List<MovieResponseDto> movies = movieService.findMovieBySubstring(substring);
+    public ResponseEntity<?> findMoviesBySubstring(@RequestParam String substring, @RequestParam(required = false, defaultValue = "0") int page,
+                                                   @RequestParam(required = false, defaultValue = "4") int size){
+        Page<MovieResponseDto> movies = movieService.findMovieBySubstring(substring, page, size);
 
         if(movies != null && !movies.isEmpty()){
             return new ResponseEntity<>(movies, HttpStatus.OK);

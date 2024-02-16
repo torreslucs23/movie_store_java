@@ -1,10 +1,17 @@
 package com.example.movies.services;
 
 import com.example.movies.dtos.MovieResponseDto;
+import com.example.movies.mappers.MovieMapper;
 import com.example.movies.models.Movie;
 import com.example.movies.repositories.MovieRepository;
 import com.example.movies.repositories.ReviewRepository;
+import com.example.movies.specifications.MovieSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,23 +27,21 @@ public class MovieService {
 
     @Autowired
     private  ReviewRepository reviewRepository;
+    @Autowired
+    private MovieMapper movieMapper;
 
     @Autowired
     public MovieService(MovieRepository movieRepository) {
         this.movieRepository = movieRepository;
     }
 
-    public List<MovieResponseDto> getAllMovies() {
-        List<Movie> movies = movieRepository.findAll();
-        List<MovieResponseDto> movieResponseDtos = new ArrayList<>();
+    public Page<MovieResponseDto> getAllMovies(int page, int size, String substring) {
+        Sort sort = Sort.by(Sort.Direction.ASC, "name");
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Movie> movies = movieRepository.findAll(pageable);
+        Page<Movie> movies = movieRepository.findAll(Specification.where(MovieSpecifications.nameContains(substring) ), pageable);
 
-        for (Movie movie : movies) {
-            MovieResponseDto movieDto = new MovieResponseDto(movie.getId(),movie.getName(), movie.getDirector(),
-                    movie.getDescription(), movie.getYear(), movieRepository.averageRatingByMovieId(movie.getId()), movie.getImgUrl());
-            movieResponseDtos.add(movieDto);
-        }
-
-        return movieResponseDtos;
+        return movies.map(movie-> movieMapper.toMovieResponseDto(movie, movieRepository)) ;
     }
 
     public MovieResponseDto getMovieById(Long id) {
@@ -72,18 +77,11 @@ public class MovieService {
         return false;
     }
 
-    public List<MovieResponseDto> findMovieBySubstring(String substring){
-        List<Movie> movies = movieRepository.findMoviesBySubstring(substring);
+    public Page<MovieResponseDto> findMovieBySubstring(String substring, int page, int size){
+        Sort sort = Sort.by(Sort.Direction.ASC, "name");
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Movie> movies = movieRepository.findAll(Specification.where(MovieSpecifications.nameContains(substring) ), pageable);
 
-        List<MovieResponseDto> movieResponseDtos = new ArrayList<>();
-
-        for (Movie movie : movies) {
-            MovieResponseDto movieDto = new MovieResponseDto(movie.getId(),movie.getName(), movie.getDirector(),
-                    movie.getDescription(), movie.getYear(),
-                    movieRepository.averageRatingByMovieId(movie.getId()), movie.getImgUrl());
-            movieResponseDtos.add(movieDto);
-        }
-
-        return movieResponseDtos;
+        return movies.map(movie-> movieMapper.toMovieResponseDto(movie, movieRepository)) ;
     }
 }
