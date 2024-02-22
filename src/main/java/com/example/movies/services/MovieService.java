@@ -38,7 +38,6 @@ public class MovieService {
     public Page<MovieResponseDto> getAllMovies(int page, int size, String substring) {
         Sort sort = Sort.by(Sort.Direction.ASC, "name");
         Pageable pageable = PageRequest.of(page, size, sort);
-        Page<Movie> movies = movieRepository.findAll(pageable);
         Page<Movie> movies = movieRepository.findAll(Specification.where(MovieSpecifications.nameContains(substring) ), pageable);
 
         return movies.map(movie-> movieMapper.toMovieResponseDto(movie, movieRepository)) ;
@@ -77,11 +76,4 @@ public class MovieService {
         return false;
     }
 
-    public Page<MovieResponseDto> findMovieBySubstring(String substring, int page, int size){
-        Sort sort = Sort.by(Sort.Direction.ASC, "name");
-        Pageable pageable = PageRequest.of(page, size, sort);
-        Page<Movie> movies = movieRepository.findAll(Specification.where(MovieSpecifications.nameContains(substring) ), pageable);
-
-        return movies.map(movie-> movieMapper.toMovieResponseDto(movie, movieRepository)) ;
-    }
 }

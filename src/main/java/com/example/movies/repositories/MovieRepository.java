@@ -15,15 +15,10 @@ import java.util.UUID;
 
 @Repository
 public interface MovieRepository extends JpaRepository <Movie, Long>, JpaSpecificationExecutor<Movie> {
-    @Query("SELECT f FROM Movie f WHERE f.name LIKE %:substring%")
-    Page<Movie> findMoviesBySubstring(@Param("substring") String substring, Pageable pageable);
+
 
     @Query("SELECT COALESCE(AVG(r.rating), null) FROM Review r WHERE r.movie.id = :movieId")
     Double averageRatingByMovieId(@Param("movieId") Long movieId);
-
-
-    Page<Movie> findAll(Pageable pageable);
-
 
 
 }

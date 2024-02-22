@@ -10,11 +10,13 @@ import java.util.stream.Collectors;
 
 @Getter
 public class UserPrincipal {
+    private Long id;
     private String username;
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
 
     private UserPrincipal(User user){
+        this.id = user.getId();
         this.username = user.getUsername();
         this.password = user.getPassword();
 
@@ -29,6 +31,14 @@ public class UserPrincipal {
 
     public String getUsername() {
         return username;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setUsername(String username) {

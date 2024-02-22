@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService{
             throw new Error("user doesn't exists");
         }
         if(passwordEncoder().matches(password, existUser.getPassword())){
-            return JwtUtil.generateToken(username);
+            return JwtUtil.generateToken(username, existUser.getId());
         }
         else {
             throw new RuntimeException("Invalid password");

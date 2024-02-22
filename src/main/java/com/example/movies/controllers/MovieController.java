@@ -1,5 +1,6 @@
 package com.example.movies.controllers;
 
+import com.example.movies.config.JwtUtil;
 import com.example.movies.dtos.MovieResponseDto;
 import com.example.movies.dtos.ResponseDto;
 import com.example.movies.models.Movie;
@@ -30,8 +31,9 @@ public class MovieController {
     @PreAuthorize("hasRole('default_user')")
     @GetMapping
     public Page<MovieResponseDto> getAllMovies(@RequestParam(required = false, defaultValue = "0") int page,
-                                               @RequestParam(required = false, defaultValue = "4") int size) {
-        return movieService.getAllMovies(page, size);
+                                               @RequestParam(required = false, defaultValue = "4") int size,
+                                                @RequestParam(required = false) String substring){
+        return movieService.getAllMovies(page, size, substring);
     }
 
 
@@ -85,20 +87,5 @@ public class MovieController {
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
 
-    }
-
-    @GetMapping("/byName")
-    @PreAuthorize("hasRole('default_user')")
-    public ResponseEntity<?> findMoviesBySubstring(@RequestParam String substring, @RequestParam(required = false, defaultValue = "0") int page,
-                                                   @RequestParam(required = false, defaultValue = "4") int size){
-        Page<MovieResponseDto> movies = movieService.findMovieBySubstring(substring, page, size);
-
-        if(movies != null && !movies.isEmpty()){
-            return new ResponseEntity<>(movies, HttpStatus.OK);
-        }
-        else{
-            ResponseDto response = new ResponseDto("error", "movie not found");
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }
     }
 }
