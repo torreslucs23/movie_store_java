@@ -37,7 +37,7 @@ public class ReviewController {
 
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
-            ResponseDto response = new ResponseDto("Error", "review not found");
+            ResponseDto response = new ResponseDto("Error: Not Found", "review is empty for the movie");
             return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
         }
     }
@@ -50,8 +50,8 @@ public class ReviewController {
             ReviewDto response = new ReviewDto(request.movieId(), request.userId(), request.rating());
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        ResponseDto response = new ResponseDto("Error", "review not found");
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        ResponseDto response = new ResponseDto("Error: Bad request", "The request fields are wrong");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
 
@@ -63,7 +63,7 @@ public class ReviewController {
             ReviewDto response = new ReviewDto(request.movieId(), request.userId(), request.rating());
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        ResponseDto response = new ResponseDto("Error", "review not found");
+        ResponseDto response = new ResponseDto("Error: Not Found", "review not found");
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
@@ -78,7 +78,7 @@ public class ReviewController {
             return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
         }
         else{
-            ResponseDto response = new ResponseDto("error", "Review not found");
+            ResponseDto response = new ResponseDto("error: Not found", "Review not found");
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
     }

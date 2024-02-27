@@ -36,7 +36,7 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((request) -> request
                         .requestMatchers(HttpMethod.POST, "/user/**", "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**"). permitAll()
-                        .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**","/app/**", "/stomp/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/user/**", "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**").permitAll()
                         .anyRequest()
                         .authenticated())

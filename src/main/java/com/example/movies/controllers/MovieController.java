@@ -2,6 +2,7 @@ package com.example.movies.controllers;
 
 import com.example.movies.config.JwtUtil;
 import com.example.movies.dtos.MovieResponseDto;
+import com.example.movies.dtos.NewMovieMessage;
 import com.example.movies.dtos.ResponseDto;
 import com.example.movies.models.Movie;
 import com.example.movies.services.MovieService;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +24,8 @@ import java.util.List;
 @SecurityRequirement(name = "Bearer Authentication")
 public class MovieController {
     private final MovieService movieService;
+    @Autowired
+    private  SimpMessagingTemplate messagingTemplate;
 
     @Autowired
     public MovieController(MovieService movieService) {
@@ -45,6 +49,7 @@ public class MovieController {
             ResponseDto response = new ResponseDto("error", "Movie not found");
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
+
         return new ResponseEntity<>(movie, HttpStatus.OK);
     }
 
@@ -53,10 +58,12 @@ public class MovieController {
     public ResponseEntity<?> createMovie(@RequestBody Movie movie) {
         Movie createdMovie = movieService.createMovie(movie);
         if(movie != null){
+            NewMovieMessage message = new NewMovieMessage("new-movie", createdMovie.getName());
+            messagingTemplate.convertAndSend("/notification/movie", message);
             return new ResponseEntity<>(createdMovie, HttpStatus.CREATED);
         }
         else{
-            ResponseDto response = new ResponseDto("error", "Failed to create the movie. Please check the provided data.");
+            ResponseDto response = new ResponseDto("error: Bas Request", "Failed to create the movie. Please check the provided data.");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
@@ -69,7 +76,7 @@ public class MovieController {
         if(movie != null){
             return new ResponseEntity<>(movie, HttpStatus.OK);
         } else {
-            ResponseDto response = new ResponseDto("error", "not found");
+            ResponseDto response = new ResponseDto("error: Not Found", "Movie not found");
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
     }
@@ -83,7 +90,7 @@ public class MovieController {
            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
         }
         else{
-            ResponseDto response = new ResponseDto("error", "movie not found");
+            ResponseDto response = new ResponseDto("error? Not Found", "movie doesn't exists");
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
 
