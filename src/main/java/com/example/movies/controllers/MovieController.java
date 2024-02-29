@@ -63,7 +63,7 @@ public class MovieController {
             return new ResponseEntity<>(createdMovie, HttpStatus.CREATED);
         }
         else{
-            ResponseDto response = new ResponseDto("error: Bas Request", "Failed to create the movie. Please check the provided data.");
+            ResponseDto response = new ResponseDto("error: Bad Request", "Failed to create the movie. Please check the provided data.");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
