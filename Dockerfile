@@ -12,7 +12,7 @@ COPY pom.xml /home/demo/
 WORKDIR "/home/demo"
 
 
-RUN mvn clean package
+RUN mvn clean install spring-boot:repackage
 
 EXPOSE 8080
 

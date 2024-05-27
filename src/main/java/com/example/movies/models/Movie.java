@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name="movies")
-
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

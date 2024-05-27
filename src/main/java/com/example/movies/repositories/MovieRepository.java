@@ -21,4 +21,5 @@ public interface MovieRepository extends JpaRepository <Movie, Long>, JpaSpecifi
     Double averageRatingByMovieId(@Param("movieId") Long movieId);
 
 
+
 }

@@ -23,13 +23,14 @@ import java.util.List;
 @RequestMapping("/movies")
 @SecurityRequirement(name = "Bearer Authentication")
 public class MovieController {
-    private final MovieService movieService;
+    @Autowired
+    private MovieService movieService;
     @Autowired
     private  SimpMessagingTemplate messagingTemplate;
 
-    @Autowired
-    public MovieController(MovieService movieService) {
-        this.movieService = movieService;
+
+    public MovieController() {
+
     }
 
     @PreAuthorize("hasRole('default_user')")

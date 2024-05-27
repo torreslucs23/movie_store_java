@@ -75,5 +75,8 @@ public class MovieService {
         }
         return false;
     }
+    public int add(int a, int b){
+        return a+b;
+    }
 
 }

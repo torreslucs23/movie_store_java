@@ -31,21 +31,30 @@ public class UserServiceImpl implements UserService{
     @Autowired
     UserRepository userRepository;
     @Override
-    public User create(User user){
-        User existUser = userRepository.findByUsername(user.getUsername());
+    public User create(User user) {
 
-        if(existUser != null){
-            throw new Error("user already exists");
+        User existUser = userRepository.findByUsername(user.getUsername());
+        if (existUser != null) {
+            throw new Error("User already exists");
         }
+
         user.setPassword(passwordEncoder().encode(user.getPassword()));
+
         Long id = Long.valueOf(1);
         Optional<Role> role = roleRepository.findById(id);
+        if (role.isEmpty()) {
+            throw new Error("Role with id " + id + " does not exist");
+        }
+
         List<Role> roles = new ArrayList<>();
         roles.add(role.get());
         user.setRoles(roles);
+
+        // Salva o usuário no repositório
         User createdUser = userRepository.save(user);
         return createdUser;
     }
+
 
     @Override
     public String login(String username, String password){
