@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService{
         if (existUser != null) {
             throw new Error("User already exists");
         }
-
+                                                                                                                                                                                                                                                                                            
         user.setPassword(passwordEncoder().encode(user.getPassword()));
 
         Long id = Long.valueOf(1);
